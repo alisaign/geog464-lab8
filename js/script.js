@@ -92,9 +92,16 @@ function fetchClimateData(climateID) {
       }
 
       const props = json.features[0].properties;
-      console.log("Date:", props.LOCAL_DATE);
-      console.log("Mean Temp (°C):", props.MEAN_TEMPERATURE);
-      console.log("Total Precip:", props.TOTAL_PRECIPITATION);
+      // console.log("Date:", props.LOCAL_DATE);
+      // console.log("Mean Temp (°C):", props.MEAN_TEMPERATURE);
+      // console.log("Total Precip:", props.TOTAL_PRECIPITATION);
+      const container = document.getElementById("climate-data");
+      container.innerHTML = `
+        <p><strong>Date:</strong> ${props.LOCAL_DATE}</p>
+        <p><strong>Max Temp:</strong> ${props.MAX_TEMPERATURE} °C</p>
+        <p><strong>Min Temp:</strong> ${props.MIN_TEMPERATURE} °C</p>
+        <p><strong>Total Precipitation:</strong> ${props.TOTAL_PRECIPITATION} mm</p>
+      `;
     })
     .catch(error => {
       console.error("Error fetching climate data:", error);
