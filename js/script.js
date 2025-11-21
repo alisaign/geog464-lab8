@@ -21,7 +21,25 @@ function loadStations(url) {
     .then(data => {
       const stationLayer = L.geoJSON(data, {
         onEachFeature: onEachStation,
-      }).addTo(map);
+        pointToLayer: (feature, latlng) => L.circleMarker(latlng, stationStyle(feature))
+        
+      });
+      // Add marker cluster group
+      const markers = L.markerClusterGroup();
+      stationLayer.eachLayer(layer => {
+        markers.addLayer(layer);
+      });
+      markers.addTo(map);
+
+      // Add layer control
+      const baseMaps = {
+        "OpenStreetMap": osm,
+      };
+      const overlayMaps = {
+        "Climate Stations": stationsLayer
+      };
+      L.control.layers(baseMaps, overlayMaps).addTo(map);
+      L.control.scale().addTo(map);
     })
     .catch(err => console.error("Error loading GeoJSON:", err));
 };
@@ -51,8 +69,8 @@ function onEachStation(feature, layer) {
 // PART 2
 // Function to fetch Environment Canada climate data
 function fetchClimateData(climateID) {
+  let year = 2025;
   const apiURL = `https://api.weather.gc.ca/collections/climate-daily/items?limit=10&sortby=-LOCAL_DATE&CLIMATE_IDENTIFIER=${climateID}`;
-
   fetch(apiURL)
     .then(response => {
       if (!response.ok) throw new Error("Network response was not ok");
@@ -75,6 +93,22 @@ function fetchClimateData(climateID) {
 }
 
 // PART 3
+// Style for stations
+function stationStyle(feature) {
+  let elev = feature.properties.ELEVATION;
+  let fillColor;
+  if (elev < 100) fillColor = "#91bfdb";
+  else if (elev < 300) fillColor = "#d4b86cff";
+  else fillColor = "#b94915ff";
+  return {
+    radius: 6,
+    fillColor: fillColor,
+    color: "#fff",
+    weight: 1,
+    opacity: 1,
+    fillOpacity: 0.8
+  };
+}
 
 
 // PART 5
