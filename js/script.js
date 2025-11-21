@@ -36,7 +36,7 @@ function loadStations(url) {
         "OpenStreetMap": osm,
       };
       const overlayMaps = {
-        "Climate Stations": stationsLayer
+        "Climate Stations": stationLayer
       };
       L.control.layers(baseMaps, overlayMaps).addTo(map);
       L.control.scale().addTo(map);
