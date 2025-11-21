@@ -6,6 +6,14 @@ const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19,
 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
+const dark = L.tileLayer(
+  "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.{ext}",
+  {
+    ext: "png",
+    attribution: "Stadia.AlidadeSmoothDark"
+  }
+);
+
 
 // PART 1
 // Load GeoJSON of weather stations
@@ -34,6 +42,7 @@ function loadStations(url) {
       // Add layer control
       const baseMaps = {
         "OpenStreetMap": osm,
+        "Stadia.AlidadeSmoothDark":dark
       };
       const overlayMaps = {
         "Climate Stations": stationLayer
@@ -112,7 +121,19 @@ function stationStyle(feature) {
 
 
 // PART 5
-
+// Add elevation color legend
+const legend = L.control({ position: 'bottomright' });
+legend.onAdd = function (map) {
+  const div = L.DomUtil.create('div', 'info legend');
+  const grades = [0, 100, 300];
+  const colors = ['#91bfdb', "#d4b86cff", "#b94915ff"];
+  div.innerHTML += '<b>Elevation (m)</b><br>';
+  for (let i = 0; i < grades.length; i++) {
+    div.innerHTML += `<i style="background:${colors[i]}"></i> ${grades[i]}${grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+'}`;
+  }
+  return div;
+};
+legend.addTo(map);
 
 // Load map
 loadStations(stationsURL);
