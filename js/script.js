@@ -92,6 +92,21 @@ function fetchClimateData(climateID) {
       }
 
       const props = json.features[0].properties;
+      console.log(props)
+      let preciptation = "";
+
+      if (props.TOTAL_PRECIPITATION !== null) {
+        preciptation += `<p><strong>Total Precipitation:</strong> ${props.TOTAL_PRECIPITATION} mm</p>`;
+      }
+
+      if (props.TOTAL_RAIN !== null) {
+        preciptation += `<p><strong>Rain:</strong> ${props.TOTAL_RAIN} mm</p>`;
+      }
+
+      if (props.TOTAL_SNOW !== null) {
+        preciptation += `<p><strong>Snow:</strong> ${props.TOTAL_SNOW} cm</p>`;
+      }
+
       // console.log("Date:", props.LOCAL_DATE);
       // console.log("Mean Temp (°C):", props.MEAN_TEMPERATURE);
       // console.log("Total Precip:", props.TOTAL_PRECIPITATION);
@@ -100,7 +115,7 @@ function fetchClimateData(climateID) {
         <p><strong>Date:</strong> ${props.LOCAL_DATE}</p>
         <p><strong>Max Temp:</strong> ${props.MAX_TEMPERATURE} °C</p>
         <p><strong>Min Temp:</strong> ${props.MIN_TEMPERATURE} °C</p>
-        <p><strong>Total Precipitation:</strong> ${props.TOTAL_PRECIPITATION} mm</p>
+        ${preciptation}
       `;
     })
     .catch(error => {
